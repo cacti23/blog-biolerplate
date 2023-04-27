@@ -7,9 +7,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const events = [];
+
 app.post("/events", async (req, res) => {
   try {
     const event = req.body;
+
+    events.push(event);
 
     await axios.post("http://localhost:4000/events", event); // post service
     await axios.post("http://localhost:4001/events", event); // comment service
@@ -20,6 +24,10 @@ app.post("/events", async (req, res) => {
   } catch (error) {
     res.send(error.message);
   }
+});
+
+app.get("/events", (req, res) => {
+  res.send(events);
 });
 
 app.listen(4005, () => {
